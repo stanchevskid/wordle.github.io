@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Worlde</title>
+    <script>
+        var words = '["вокал","мисла","табла","океан","молив","јазик","камин"]';
+        var wordObj = JSON.parse(words)
+        window.onload = function () {
+            generateInputs()
+        }
+        var wordOfTheDay = wordObj[Math.floor(Math.random() * 7)]
+        function generateInputs() {
+            var element = document.createElement('div')
+            var nameOfFunction
+            for (var i = 0; i < 5; i++) {
+                if (i == 4) nameOfFunction = "check(this)"
+                else nameOfFunction = "nextField(this)"
+                var field = document.createElement('input')
+                field.setAttribute('maglength', 1)
+                field.setAttribute('class', "box")
+                field.setAttribute('onkeyup', nameOfFunction)
+                element.appendChild(field)
+            }
+            document.getElementById('container').appendChild(element)
+        }
+
+        function nextField(current) {
+            var parent = current.parentNode.children
+            for (var i = 0; i < parent.length; i++) {
+                if (parent[i] == current) parent[i + 1].select()
+            }
+        }
+
+        function check(current) {
+            var parent = current.parentNode.children
+            var guess = ""
+            for (var i = 0; i < parent.length; i++) {
+                guess += parent[i].value
+            }
+            console.log(guess)
+            for (var i = 0; i < parent.length; i++) {
+                parent[i].setAttribute('disabled', "true")
+                if (guess[i] == wordOfTheDay[i]) parent[i].classList.add('correct')
+                else if (guess.includes(wordOfTheDay[i])) parent[i].classList.add('contains')
+                else parent[i].classList.add('wrong')
+            }
+            generateInputs()
+        }
+    </script>
+    <style>
+        .box {
+            width: 80px;
+            height: 80px;
+            border: 2px solid lightgray;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 2px;
+            font-size: 50px;
+            text-align: center;
+            text-transform: uppercase;
+
+        }
+
+        #container {
+            margin: auto;
+            width: 500px;
+        }
+
+        .correct {
+            background-color: #22c45e;
+            border-color: #22c45e;
+            color: white;
+            animation-name: toCorrect;
+            animation-duration: 500ms;
+        }
+
+        @keyframes toCorrect {
+            from {
+                background-color: white;
+                border: 2px solid lightgray;
+
+            }
+            to {
+                background-color: #22c45e;
+                border-color: #22c45e;
+            }
+        }
+        @keyframes toContains {
+            from {
+                background-color: white;
+                border: 2px solid lightgray;
+
+            }
+            to {
+                background-color: #eab308;
+                border-color: #eab308;
+            }
+        }
+        @keyframes toWrong {
+            from {
+                background-color: white;
+                border: 2px solid lightgray;
+
+            }
+            to {
+                background-color: #dadada;
+                border-color: #dadada;
+            }
+        }
+        .wrong {
+            background-color: #dadada;
+            color: white;
+            border-color: #dadada;
+            animation-name: toWrong;
+            animation-duration: 1s;
+        }
+
+        .contains {
+            background-color: #eab308;
+            color: white;
+            border-color: #eab308;
+            animation-name:toContains;
+            animation-duration: 500ms;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+</body>
+</html>
